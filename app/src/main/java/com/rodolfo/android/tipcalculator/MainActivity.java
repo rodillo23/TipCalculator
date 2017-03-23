@@ -1,6 +1,7 @@
 package com.rodolfo.android.tipcalculator;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -38,6 +39,20 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setTipValues();
+
+        String tipPercentage = "";
+        String tipAmount = "";
+        String billTotalAmount = "";
+
+        if (savedInstanceState != null){
+            tipPercentage = savedInstanceState.getString("tipPercent");
+            tipAmount = savedInstanceState.getString("tipAmount");
+            billTotalAmount = savedInstanceState.getString("billTotalAmount");
+        }
+
+        mTvTipPercent.setText(tipPercentage);
+        mTvTipAmount.setText(tipAmount);
+        mTvBillTotalAmount.setText(billTotalAmount);
     }
 
     private void setTipValues() {
@@ -66,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
     @OnTextChanged(R.id.etBillAmount)
     public void onTextChanged() {
         calculateFinallBill();
-        setTipValues();
     }
 
     private void calculateFinallBill() {
@@ -81,5 +95,13 @@ public class MainActivity extends AppCompatActivity {
 
         tipTotal = (totalBillAmount * percentage)/100;
         finalBillAmount = totalBillAmount + tipTotal;
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString("tipPercent", mTvTipPercent.getText().toString());
+        outState.putString("tipAmount", mTvTipAmount.getText().toString());
+        outState.putString("billTotalAmount", mTvBillTotalAmount.getText().toString());
+        super.onSaveInstanceState(outState);
     }
 }
